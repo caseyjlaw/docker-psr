@@ -5,9 +5,10 @@ WORKDIR /home
 
 RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /etc/apt/sources.list
 RUN apt-get update -y && apt-get install -y emacs libcfitsio3 libcfitsio3-dev pgplot5 wget libgsl0-dev \
-    python python-pip python-numpy
+    python python-pip python-numpy python-scipy
 
 RUN cd /usr/local && wget https://storage.googleapis.com/student_tools/pulsar64.tar.gz && tar xvfz pulsar64.tar.gz
+RUN ln -s /usr/lib/x86_64-linux-gnu/libcfitsio.so /usr/lib/x86_64-linux-gnu/libcfitsio.so.0
 
 ENV PSR64 /usr/local/pulsar64
 ENV PYTHONBASE /usr/lib/local
