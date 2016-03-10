@@ -1,45 +1,25 @@
-FROM ubuntu:latest
-MAINTAINER Casey Law <caseyjlaw@gmail.com>
-
-RUN apt-get update -y && \
-    apt-get install -y wget python make gcc gfortran git \
-    xorg xorg-dev gpp g++ libxml2 libxml2-dev tcsh
-# dh-autoreconf
-
+FROM ubuntu:14.04.4
+MAINTAINER caseyjlaw@gmail.com
 
 WORKDIR /home
-RUN git clone https://github.com/SixByNine/psrsoft.git
 
-# build psrsoft stuff
-ENV PSRSOFT_USR /usr/local
-#? ENV LD_LIBRARY_PATH /usr/local/lib
+RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /etc/apt/sources.list
+RUN apt-get update -y && apt-get install -y emacs libcfitsio3 libcfitsio3-dev pgplot5 wget libgsl0-dev \
+    python python-pip python-numpy
 
-RUN grep -v "export PSRSOFT_USR" /home/psrsoft/config/profile.example > /home/psrsoft/config/profile
-RUN /home/psrsoft/bin/psrsoft world --yes
+RUN cd /usr/local && wget https://storage.googleapis.com/student_tools/pulsar64.tar.gz && tar xvfz pulsar64.tar.gz
 
-RUN ${PSRSOFT_DIR}/bin/psrsoft tempo --yes # then type 1
+ENV PSR64 /usr/local/pulsar64
+ENV PYTHONBASE /usr/lib/local
+ENV PYTHONVER 2.7
+ENV PGPLOT_DIR /usr/lib64/pgplot
+ENV PRESTO $PSR64/src/presto
+ENV TEMPO $PSR64/src/tempo
+ENV TEMPO2 $PSR64/share/tempo2
+ENV PATH $PSR64/bin:$PRESTO/bin:$PYTHONBASE/bin:$PATH
+ENV PYTHONPATH $PSR64/lib/python$PYTHONVER/site-packages:$PRESTO/lib/python:$PYTHONBASE/lib/python$PYTHONVER:$PYTHONBASE/lib/python$PYTHONVER/site-packages
+ENV LD_LIBRARY_PATH $PSR64/lib:$PRESTO/lib:$TEMPO2/lib:$PYTHONBASE/lib
+ENV LIBRARY_PATH $PSR64/lib:$PRESTO/lib:$TEMPO2/lib:$PYTHONBASE/lib
+ENV CPATH /usr/local/include
 
-RUN git clone https://bitbucket.org/mkeith/tempo2.git
-RUN cd tempo2 && ./update && ./bootstrap && ./configure --prefix /usr/local/
-RUN make && make install
-
-RUN git clone git://git.code.sf.net/p/psrchive/code psrchive
-
-# RUN ${PSRSOFT_DIR}/bin/psrsoft tempo2 --yes # then type 1
-# RUN ${PSRSOFT_DIR}/bin/psrsoft tempo2-plugins --yes
-
-#...psrchive failing...
-# RUN ${PSRSOFT_DIR}/bin/psrsoft psrchive
-
-# RUN ${PSRSOFT_DIR}/bin/psrsoft dspsr --yes
-
-# build presto
-#RUN cd /home
-#RUN git clone git://github.com/scottransom/presto.git
-
-
-# set up
-#EXPOSE 8888  # for jupyter notebook
-#RUN ["/bin/bash", "/setup.sh"]
-#ENTRYPOINT ["/entrypoint.sh"]
-#CMD ["help"]
+ENTRYPOINT /bin/bash
