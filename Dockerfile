@@ -5,13 +5,12 @@ WORKDIR /home
 
 RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /etc/apt/sources.list
 RUN apt-get update -y && apt-get install -y emacs libcfitsio3 libcfitsio3-dev pgplot5 wget libgsl0-dev \
-    python python-pip python-numpy python-scipy
+    python python-pip python-numpy python-scipy python-matplotlib ipython x11-apps
 
 RUN cd /usr/local && wget https://storage.googleapis.com/student_tools/pulsar64.tar.gz && tar xvfz pulsar64.tar.gz
 RUN ln -s /usr/lib/x86_64-linux-gnu/libcfitsio.so /usr/lib/x86_64-linux-gnu/libcfitsio.so.0
-RUN wget http://www.atnf.csiro.au/people/pulsar/psrcat/downloads/psrcat_pkg.tar.gz
-RUN tar xvfz psrcat_pkg.tar.gz && cd psrcat_tar && bash makeit 
-RUN cd psrcat_tar && cp psrcat /usr/local/pulsar64/bin/psrcat && cp psrcat.db /usr/local/pulsar64/include/psrcat.db
+RUN wget http://www.atnf.csiro.au/people/pulsar/psrcat/downloads/psrcat_pkg.tar.gz && tar xvfz psrcat_pkg.tar.gz && cd psrcat_tar && bash makeit 
+RUN cp /home/psrcat_tar/psrcat /usr/local/pulsar64/bin/psrcat && cp /home/psrcat_tar/psrcat.db /usr/local/pulsar64/include/psrcat.db
 
 ENV PSR64 /usr/local/pulsar64
 ENV PYTHONBASE /usr/lib/local
