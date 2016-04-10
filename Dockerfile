@@ -5,7 +5,8 @@ WORKDIR /home
 
 RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /etc/apt/sources.list
 RUN apt-get update -y && apt-get install -y emacs libcfitsio3 libcfitsio3-dev pgplot5 wget libgsl0-dev \
-    python python-pip python-numpy python-scipy python-matplotlib ipython x11-apps
+    python python-pip python-numpy python-scipy python-matplotlib ipython x11-apps gfortran git \
+    libglib2.0-dev pkg-config
 
 RUN cd /usr/local && wget https://storage.googleapis.com/student_tools/pulsar64.tar.gz && tar xvfz pulsar64.tar.gz
 RUN cd / && wget https://storage.googleapis.com/student_tools/sigproc.tar.gz && tar xvfz sigproc.tar.gz
@@ -25,6 +26,16 @@ ENV PYTHONPATH $PSR64/lib/python$PYTHONVER/site-packages:$PRESTO/lib/python:$PYT
 ENV LD_LIBRARY_PATH $PSR64/lib:$PRESTO/lib:$TEMPO2/lib:$PYTHONBASE/lib
 ENV LIBRARY_PATH $PSR64/lib:$PRESTO/lib:$TEMPO2/lib:$PYTHONBASE/lib
 ENV CPATH /usr/local/include
-ENV PSRCAT_FILE /usr/local/pulsar64/include/psrcat.db 
+ENV PSRCAT_FILE /usr/local/pulsar64/include/psrcat.db
+ENV PKG_CONFIG_PATH /usr/local/pulsar64/src/fftw-3.3.4
+
+# rebuild presto
+RUN git clone http://github.com/scottransom/presto.git && cd presto
+RUN cd presto/src && awk '{if ($1=="FFTINC") printf("FFTINC = -I/usr/local/pulsar64/include\n"); else print $0}' Makefile > Makefile2
+RUN cd presto/src && mv Makefile2 Makefile && make
+
+# MWA compat
+RUN echo '-2559454.08    5095372.14      -2849057.18     1  MWA                 k  MA' >> $TEMPO/obsys.dat
+RUN echo '-2559454.08    5095372.14      -2849057.18       MWA                 mwa' >> $TEMPO2/observatory/observatories.dat
 
 ENTRYPOINT /bin/bash
