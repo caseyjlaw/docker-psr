@@ -30,9 +30,10 @@ ENV PSRCAT_FILE /usr/local/pulsar64/include/psrcat.db
 ENV PKG_CONFIG_PATH /usr/local/pulsar64/src/fftw-3.3.4
 
 # rebuild presto
-RUN git clone http://github.com/scottransom/presto.git && cd presto
+RUN git clone http://github.com/caseyjlaw/presto.git && cd presto
 RUN cd presto/src && awk '{if ($1=="FFTINC") printf("FFTINC = -I/usr/local/pulsar64/include\n"); else print $0}' Makefile > Makefile2
 RUN cd presto/src && mv Makefile2 Makefile && make
+
 
 # MWA compat
 RUN echo '-2559454.08    5095372.14      -2849057.18     1  MWA                 k  MA' >> $TEMPO/obsys.dat
