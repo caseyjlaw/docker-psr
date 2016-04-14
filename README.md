@@ -16,12 +16,15 @@ You'll find most pulsar software in /usr/local/pulsar64 and environment variable
 
 # Using
 To build:
+
     docker build -t caseyjlaw/pulsar-stack .
 
 To run image available in docker hub:
+
     docker run -it caseyjlaw/pulsar-stack bash
 
 You can mount your data directory into the docker container with the -v flag, so:
+
     docker run -it -v /data:/data caseyjlaw/pulsar-stack bash
 
 This will drop you in to an ubuntu os with bash shell with all data in /data. 
