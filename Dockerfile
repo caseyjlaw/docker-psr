@@ -6,7 +6,7 @@ WORKDIR /home
 RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /etc/apt/sources.list
 RUN apt-get update -y && apt-get install -y emacs libcfitsio3 libcfitsio3-dev pgplot5 wget libgsl0-dev \
     python python-pip python-numpy python-scipy python-matplotlib ipython x11-apps gfortran git \
-    libglib2.0-dev pkg-config
+    libglib2.0-dev pkg-config ipython-notebook
 
 RUN cd /usr/local && wget https://storage.googleapis.com/student_tools/pulsar64.tar.gz && tar xvfz pulsar64.tar.gz
 RUN cd / && wget https://storage.googleapis.com/student_tools/sigproc.tar.gz && tar xvfz sigproc.tar.gz
@@ -40,3 +40,5 @@ RUN echo '-2559454.08    5095372.14      -2849057.18     1  MWA                 
 RUN echo '-2559454.08    5095372.14      -2849057.18       MWA                 mwa' >> $TEMPO2/observatory/observatories.dat
 
 ENTRYPOINT /bin/bash
+# To run as an ipython notebook server, change the entrypoint to the following line:
+ENTRYPOINT ipython notebook --ip='*' --no-browser
