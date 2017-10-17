@@ -31,9 +31,7 @@ This will drop you in to an ubuntu os with bash shell with all data in /data.
 
 New users may also find "docker do" useful to run pulsar tools without interactively running bash in a container. See https://github.com/deepgram/sidomo for more info.
 
-To run as an ipython notebook server, use:
-    docker run -d -v /data:/data -p 8888:8888 caseyjlaw/pulsar-stack
-And then visit http://localhost:8888 on your local browser.
+To run as an ipython notebook server, use `docker run -d -v /data:/data -p 8888:8888 caseyjlaw/pulsar-stack` and then visit http://localhost:8888 on your local browser.
 
 # Issues
 Report problems to caseyjlaw@gmail.com. 
