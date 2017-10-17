@@ -41,4 +41,4 @@ RUN echo '-2559454.08    5095372.14      -2849057.18       MWA                 m
 
 ENTRYPOINT /bin/bash
 # To run as an ipython notebook server, change the entrypoint to the following line:
-ENTRYPOINT ipython notebook --ip='*' --no-browser
+# ENTRYPOINT ipython notebook --ip='*' --no-browser
